@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zawiyah Foundation Michigan – Prayer Times</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0a1628;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+  .header {
+    text-align: center;
+    padding: 20px 40px 12px;
+  }
+  .arabic-basmala {
+    font-family: 'Amiri', serif;
+    font-size: 1.5rem;
+    color: #c9a84c;
+    margin-bottom: 4px;
+    direction: rtl;
+  }
+  .masjid-name {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #e8d5a3;
+    letter-spacing: 0.04em;
+  }
+  .date-line {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    font-size: 0.92rem;
+    color: #94a3b8;
+    margin-top: 6px;
+  }
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, #c9a84c55, transparent);
+    margin: 0 40px;
+  }
+  .table-header {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    padding: 10px 48px 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #c9a84c;
+  }
+  .table-header span:nth-child(2) { text-align: center; }
+  .table-header span:nth-child(3) { text-align: center; }
+  .prayers-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 40px 8px;
+    gap: 7px;
+  }
+  .prayer-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    align-items: center;
+    padding: 14px 8px;
+    border-radius: 12px;
+    position: relative;
+  }
+  .prayer-row.active {
+    background: linear-gradient(135deg, #1a2f4e 0%, #162540 50%, #1a2f4e 100%);
+    border: 1px solid #c9a84c55;
+  }
+  .prayer-row.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%; transform: translateY(-50%);
+    width: 4px; height: 70%;
+    background: #c9a84c;
+    border-radius: 0 4px 4px 0;
+  }
+  .prayer-row.upcoming { background: #0d1e35; }
+  .prayer-row.past { opacity: 0.4; }
+  .prayer-row.jumua-row {
+    background: #12223a;
+    border: 1px solid #c9a84c33;
+  }
+  .prayer-row.jumua-row.active {
+    background: linear-gradient(135deg, #1a2f4e 0%, #162540 50%, #1a2f4e 100%);
+    border: 1px solid #c9a84c77;
+  }
+  .prayer-name-block { display: flex; align-items: center; gap: 12px; }
+  .prayer-icon {
+    width: 38px; height: 38px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .prayer-name {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #f1f5f9;
+  }
+  .prayer-name-ar {
+    font-family: 'Amiri', serif;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    direction: rtl;
+  }
+  .active .prayer-name { color: #fff; font-weight: 600; }
+  .adhan {
+    text-align: center;
+    font-size: 1.45rem;
+    font-weight: 400;
+    color: #cbd5e1;
+    font-variant-numeric: tabular-nums;
+  }
+  .active .adhan { color: #e8d5a3; font-weight: 500; }
+  .iqama {
+    text-align: center;
+    font-size: 1.45rem;
+    font-weight: 600;
+    color: #c9a84c;
+    font-variant-numeric: tabular-nums;
+  }
+  .now-badge {
+    display: inline-block;
+    background: #c9a84c;
+    color: #0a1628;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin-left: 7px;
+    vertical-align: middle;
+  }
+  .jumua-badge {
+    display: inline-block;
+    background: #1d3a5c;
+    color: #7ab3e0;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin-left: 7px;
+    vertical-align: middle;
+    border: 1px solid #2a5080;
+  }
+  .bottom-bar {
+    padding: 10px 48px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .clock {
+    font-size: 2.8rem;
+    font-weight: 300;
+    color: #e8d5a3;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .clock-ampm {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #94a3b8;
+    margin-left: 5px;
+  }
+  .next-prayer-info { text-align: right; }
+  .next-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 2px;
+  }
+  .next-value {
+    font-size: 1.05rem;
+    color: #c9a84c;
+    font-weight: 500;
+  }
+  .loading {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="arabic-basmala">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+  <div class="masjid-name">Zawiyah Foundation Michigan</div>
+  <div class="date-line">
+    <span id="gregorian-date"></span>
+    <span style="color:#c9a84c">✦</span>
+    <span id="hijri-date"></span>
+    <span style="color:#c9a84c">✦</span>
+    <span>Ypsilanti, MI</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="table-header">
+  <span>Prayer</span>
+  <span>Adhan</span>
+  <span>Iqama</span>
+</div>
+
+<div class="prayers-container" id="prayers-container">
+  <div class="loading">Loading prayer times…</div>
+</div>
+
+<div class="divider"></div>
+
+<div class="bottom-bar">
+  <div class="clock" id="clock">--:--</div>
+  <div class="next-prayer-info">
+    <div class="next-label">Next Prayer</div>
+    <div class="next-value" id="next-prayer-display">—</div>
+  </div>
+</div>
+
+<script>
+const PRAYER_ARABIC = {
+  Fajr: 'الفجر', Sunrise: 'الشروق', Dhuhr: 'الظهر',
+  Asr: 'العصر', Maghrib: 'المغرب', Isha: 'العشاء', "Jumu'ah": 'الجمعة'
+};
+const PRAYER_ICONS = {
+  Fajr: '🌙', Sunrise: '🌅', Dhuhr: '☀️',
+  Asr: '🌤', Maghrib: '🌇', Isha: '🌃', "Jumu'ah": '🕌'
+};
+const PRAYER_COLORS = {
+  Fajr: '#1a3a5c', Sunrise: '#2a2a1a', Dhuhr: '#1a3a3a',
+  Asr: '#2a2a1a', Maghrib: '#3a1a1a', Isha: '#1a1a3a', "Jumu'ah": '#1a2f1a'
+};
+
+// Fixed / offset iqama config
+// null = no iqama (Sunrise), string = fixed time, number = minutes offset after adhan
+const IQAMA_CONFIG = {
+  Fajr:     '5:40 AM',
+  Sunrise:  null,
+  Dhuhr:    '2:00 PM',
+  Asr:      '6:55 PM',
+  Maghrib:  5,
+  Isha:     5,
+  "Jumu'ah": '2:00 PM'
+};
+
+let prayerTimes = [];
+
+function toMinutes(timeStr) {
+  const [t, mod] = timeStr.split(' ');
+  let [h, m] = t.split(':').map(Number);
+  if (mod === 'PM' && h !== 12) h += 12;
+  if (mod === 'AM' && h === 12) h = 0;
+  return h * 60 + m;
+}
+
+function addMinutes(timeStr, mins) {
+  let total = toMinutes(timeStr) + mins;
+  let h = Math.floor(total / 60) % 24;
+  let m = total % 60;
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return `${h}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+
+function resolveIqama(prayerName, adhanTime) {
+  const cfg = IQAMA_CONFIG[prayerName];
+  if (cfg === null || cfg === undefined) return null;
+  if (typeof cfg === 'string') return cfg;
+  if (typeof cfg === 'number') return addMinutes(adhanTime, cfg);
+  return null;
+}
+
+function getHijriDate() {
+  try {
+    return new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    }).format(new Date());
+  } catch(e) { return ''; }
+}
+
+function isFriday() {
+  return new Date().getDay() === 5;
+}
+
+async function fetchPrayerTimes() {
+  const today = new Date();
+  const month = today.getMonth() + 1;
+  const year = today.getFullYear();
+  const day = today.getDate();
+  const url = `https://api.aladhan.com/v1/calendar/${year}/${month}?latitude=42.2411&longitude=-83.6130&method=2`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    const timings = data.data[day - 1].timings;
+    const fmt = t => {
+      let [h, m] = t.replace(/ \(.*\)/, '').split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      return `${h}:${String(m).padStart(2,'0')} ${ampm}`;
+    };
+    prayerTimes = [
+      { name: 'Fajr',    adhan: fmt(timings.Fajr)    },
+      { name: 'Sunrise', adhan: fmt(timings.Sunrise)  },
+      { name: 'Dhuhr',   adhan: fmt(timings.Dhuhr),   isJumua: false },
+      { name: 'Asr',     adhan: fmt(timings.Asr)     },
+      { name: 'Maghrib', adhan: fmt(timings.Maghrib)  },
+      { name: 'Isha',    adhan: fmt(timings.Isha)    },
+    ];
+
+    // On Fridays, replace Dhuhr with Jumu'ah
+    if (isFriday()) {
+      prayerTimes[2] = { name: "Jumu'ah", adhan: fmt(timings.Dhuhr), isJumua: true };
+    }
+
+    renderPrayers();
+  } catch(e) {
+    document.getElementById('prayers-container').innerHTML =
+      '<div class="loading" style="color:#e24b4a">Could not load prayer times. Check internet connection.</div>';
+  }
+}
+
+function renderPrayers() {
+  const now = new Date();
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+
+  const display = prayerTimes.map(p => ({
+    ...p,
+    iqama: resolveIqama(p.name, p.adhan),
+    minutes: toMinutes(p.adhan)
+  }));
+
+  let activeIdx = -1, nextIdx = -1;
+  for (let i = display.length - 1; i >= 0; i--) {
+    if (display[i].minutes <= nowMin) { activeIdx = i; break; }
+  }
+  for (let i = 0; i < display.length; i++) {
+    if (display[i].minutes > nowMin) { nextIdx = i; break; }
+  }
+
+  const container = document.getElementById('prayers-container');
+  container.innerHTML = '';
+
+  display.forEach((p, i) => {
+    const isActive = i === activeIdx;
+    const isPast = i < activeIdx;
+    const isJumua = p.isJumua;
+
+    const row = document.createElement('div');
+    let cls = `prayer-row ${isActive ? 'active' : isPast ? 'past' : 'upcoming'}`;
+    if (isJumua) cls += ' jumua-row';
+    row.className = cls;
+
+    const nameBadge = isActive
+      ? '<span class="now-badge">Now</span>'
+      : isJumua ? '<span class="jumua-badge">Friday</span>' : '';
+
+    const iqamaCell = p.iqama
+      ? `<div class="iqama">${p.iqama}</div>`
+      : `<div class="iqama" style="color:#475569;font-size:0.9rem">—</div>`;
+
+    row.innerHTML = `
+      <div class="prayer-name-block">
+        <div class="prayer-icon" style="background:${PRAYER_COLORS[p.name] || '#1a2535'}">${PRAYER_ICONS[p.name] || '🕌'}</div>
+        <div>
+          <div class="prayer-name">${p.name}${nameBadge}</div>
+          <div class="prayer-name-ar">${PRAYER_ARABIC[p.name] || ''}</div>
+        </div>
+      </div>
+      <div class="adhan">${p.adhan}</div>
+      ${iqamaCell}
+    `;
+    container.appendChild(row);
+  });
+
+  if (nextIdx !== -1) {
+    const next = display[nextIdx];
+    const diff = next.minutes - nowMin;
+    const hh = Math.floor(diff / 60);
+    const mm = diff % 60;
+    const countdown = hh > 0 ? `${hh}h ${mm}m` : `${mm} min`;
+    document.getElementById('next-prayer-display').textContent = `${next.name} in ${countdown}`;
+  } else {
+    document.getElementById('next-prayer-display').textContent = 'Fajr tomorrow';
+  }
+}
+
+function updateClock() {
+  const now = new Date();
+  let h = now.getHours();
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  document.getElementById('clock').innerHTML =
+    `${h}:${m}<span class="clock-ampm">${ampm}</span>`;
+}
+
+function updateDates() {
+  const now = new Date();
+  document.getElementById('gregorian-date').textContent =
+    now.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  const hijri = getHijriDate();
+  if (hijri) document.getElementById('hijri-date').textContent = hijri + ' AH';
+}
+
+updateDates();
+updateClock();
+fetchPrayerTimes();
+setInterval(updateClock, 1000);
+setInterval(() => { if (prayerTimes.length) renderPrayers(); }, 30000);
+const midnight = new Date(); midnight.setHours(24,0,0,0);
+setTimeout(() => { fetchPrayerTimes(); updateDates(); }, midnight - new Date());
+</script>
+</body>
+</html>
