@@ -197,9 +197,76 @@
     color: #64748b;
     font-size: 1.2rem;
   }
+
+  /* ── Iqama Countdown Overlay ── */
+  .iqama-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 10, 20, 0.97);
+    z-index: 1000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .iqama-overlay.visible { display: flex; }
+  .overlay-prayer-name {
+    font-family: 'Amiri', serif;
+    font-size: 3rem;
+    color: #c9a84c;
+    margin-bottom: 10px;
+    direction: rtl;
+  }
+  .overlay-label {
+    font-size: 2rem;
+    font-weight: 300;
+    color: #94a3b8;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+  }
+  .overlay-countdown {
+    font-size: 11rem;
+    font-weight: 700;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+  .overlay-countdown.urgent { color: #e85d4a; }
+  .overlay-seconds-label {
+    font-size: 1.5rem;
+    color: #64748b;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+  .overlay-iqama-time {
+    font-size: 2.2rem;
+    font-weight: 500;
+    color: #c9a84c;
+  }
+  .overlay-straighten {
+    font-size: 1.4rem;
+    color: #94a3b8;
+    margin-top: 16px;
+    letter-spacing: 0.05em;
+  }
 </style>
 </head>
 <body>
+
+
+<!-- Iqama Countdown Overlay -->
+<div class="iqama-overlay" id="iqama-overlay">
+  <div class="overlay-prayer-name" id="overlay-prayer-ar"></div>
+  <div class="overlay-label" id="overlay-prayer-en"></div>
+  <div class="overlay-countdown" id="overlay-seconds">60</div>
+  <div class="overlay-seconds-label">seconds until iqama</div>
+  <div class="overlay-iqama-time" id="overlay-iqama-time"></div>
+  <div class="overlay-straighten">Please make your rows straight — أقيموا الصفوف</div>
+</div>
 
 <div class="header">
   <div class="arabic-basmala">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
@@ -252,7 +319,7 @@ const PRAYER_COLORS = {
 const IQAMA_CONFIG = {
   Fajr:     '5:30 AM',
   Sunrise:  null,
-  Dhuhr:    '2:00 PM',
+  Dhuhr:    '2:50 PM',
   Asr:      '7:00 PM',
   Maghrib:  5,
   Isha:     5,
@@ -424,6 +491,54 @@ setInterval(updateClock, 1000);
 setInterval(() => { if (prayerTimes.length) renderPrayers(); }, 30000);
 const midnight = new Date(); midnight.setHours(24,0,0,0);
 setTimeout(() => { fetchPrayerTimes(); updateDates(); }, midnight - new Date());
+
+/* ── Iqama Countdown Overlay ── */
+let overlayInterval = null;
+
+function checkIqamaCountdown() {
+  const now = new Date();
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  const nowSec = now.getSeconds();
+  const totalSec = nowMin * 60 + nowSec;
+
+  const display = prayerTimes.map(p => ({
+    ...p,
+    iqama: resolveIqama(p.name, p.adhan),
+  }));
+
+  // Add Jumu'ah if Friday
+  if (isFriday()) {
+    const di = display.findIndex(p => p.name === 'Dhuhr');
+    if (di !== -1) display[di] = { name: "Jumu'ah", adhan: display[di].adhan, iqama: "2:00 PM", isJumua: true };
+  }
+
+  const overlay = document.getElementById('iqama-overlay');
+
+  for (const p of display) {
+    if (!p.iqama || p.iqama === '—') continue;
+    const iqamaMin = toMinutes(p.iqama);
+    const iqamaSec = iqamaMin * 60;
+    const diff = iqamaSec - totalSec;
+
+    if (diff > 0 && diff <= 60) {
+      // Show overlay
+      overlay.classList.add('visible');
+      const secEl = document.getElementById('overlay-seconds');
+      secEl.textContent = diff;
+      secEl.className = 'overlay-countdown' + (diff <= 20 ? ' urgent' : '');
+      document.getElementById('overlay-prayer-ar').textContent = PRAYER_ARABIC[p.name] || '';
+      document.getElementById('overlay-prayer-en').textContent = p.name + ' Iqama';
+      document.getElementById('overlay-iqama-time').textContent = p.iqama;
+      return;
+    }
+  }
+
+  // No iqama imminent — hide overlay
+  overlay.classList.remove('visible');
+}
+
+setInterval(checkIqamaCountdown, 1000);
+
 </script>
 </body>
 </html>
