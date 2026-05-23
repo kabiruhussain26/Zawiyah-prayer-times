@@ -259,6 +259,12 @@
 
 
 <!-- Iqama Countdown Overlay -->
+
+<!-- Silent video loop to prevent Fire Stick from sleeping -->
+<video id="keep-awake" loop muted playsinline autoplay
+  style="position:fixed;width:1px;height:1px;opacity:0.01;pointer-events:none;top:0;left:0;">
+</video>
+
 <div class="iqama-overlay" id="iqama-overlay">
   <div class="overlay-prayer-name" id="overlay-prayer-ar"></div>
   <div class="overlay-label" id="overlay-prayer-en"></div>
@@ -538,6 +544,33 @@ function checkIqamaCountdown() {
 }
 
 setInterval(checkIqamaCountdown, 1000);
+
+
+/* ── Prevent Fire Stick sleep ── */
+// 1) Wake Lock API
+async function requestWakeLock() {
+  try {
+    if ('wakeLock' in navigator) {
+      await navigator.wakeLock.request('screen');
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') requestWakeLock();
+      });
+    }
+  } catch(e) {}
+}
+requestWakeLock();
+
+// 2) Simulate user activity every 30 seconds
+setInterval(() => {
+  document.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: Math.random()*10, clientY: Math.random()*10 }));
+}, 30000);
+
+// 3) Keep video element playing
+const vid = document.getElementById('keep-awake');
+if (vid) {
+  vid.play().catch(() => {});
+  setInterval(() => vid.play().catch(() => {}), 30000);
+}
 
 </script>
 </body>
