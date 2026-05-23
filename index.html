@@ -18,17 +18,17 @@
   @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
   .header {
     text-align: center;
-    padding: 20px 40px 12px;
+    padding: 14px 40px 8px;
   }
   .arabic-basmala {
     font-family: 'Amiri', serif;
-    font-size: 1.5rem;
+    font-size: 2rem;
     color: #c9a84c;
     margin-bottom: 4px;
     direction: rtl;
   }
   .masjid-name {
-    font-size: 1.8rem;
+    font-size: 2.4rem;
     font-weight: 600;
     color: #e8d5a3;
     letter-spacing: 0.04em;
@@ -36,10 +36,10 @@
   .date-line {
     display: flex;
     justify-content: center;
-    gap: 28px;
-    font-size: 0.92rem;
+    gap: 24px;
+    font-size: 1.1rem;
     color: #94a3b8;
-    margin-top: 6px;
+    margin-top: 5px;
   }
   .divider {
     height: 1px;
@@ -48,9 +48,9 @@
   }
   .table-header {
     display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
-    padding: 10px 48px 6px;
-    font-size: 0.75rem;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 8px 20px 4px;
+    font-size: 0.95rem;
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -62,14 +62,14 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 0 40px 8px;
-    gap: 7px;
+    padding: 0 20px 4px;
+    gap: 5px;
   }
   .prayer-row {
     display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
-    padding: 14px 8px;
+    padding: 10px 8px;
     border-radius: 12px;
     position: relative;
   }
@@ -95,29 +95,29 @@
     background: linear-gradient(135deg, #1a2f4e 0%, #162540 50%, #1a2f4e 100%);
     border: 1px solid #c9a84c77;
   }
-  .prayer-name-block { display: flex; align-items: center; gap: 12px; }
+  .prayer-name-block { display: flex; align-items: center; gap: 14px; }
   .prayer-icon {
-    width: 38px; height: 38px;
-    border-radius: 9px;
+    width: 56px; height: 56px;
+    border-radius: 11px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.9rem;
     flex-shrink: 0;
   }
   .prayer-name {
-    font-size: 1.2rem;
+    font-size: 2rem;
     font-weight: 500;
     color: #f1f5f9;
   }
   .prayer-name-ar {
     font-family: 'Amiri', serif;
-    font-size: 0.9rem;
+    font-size: 1.3rem;
     color: #94a3b8;
     direction: rtl;
   }
   .active .prayer-name { color: #fff; font-weight: 600; }
   .adhan {
     text-align: center;
-    font-size: 1.45rem;
+    font-size: 2.2rem;
     font-weight: 400;
     color: #cbd5e1;
     font-variant-numeric: tabular-nums;
@@ -125,7 +125,7 @@
   .active .adhan { color: #e8d5a3; font-weight: 500; }
   .iqama {
     text-align: center;
-    font-size: 1.45rem;
+    font-size: 2.2rem;
     font-weight: 600;
     color: #c9a84c;
     font-variant-numeric: tabular-nums;
@@ -134,58 +134,58 @@
     display: inline-block;
     background: #c9a84c;
     color: #0a1628;
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    padding: 2px 7px;
+    padding: 2px 8px;
     border-radius: 20px;
-    margin-left: 7px;
+    margin-left: 8px;
     vertical-align: middle;
   }
   .jumua-badge {
     display: inline-block;
     background: #1d3a5c;
     color: #7ab3e0;
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    padding: 2px 7px;
+    padding: 2px 8px;
     border-radius: 20px;
-    margin-left: 7px;
+    margin-left: 8px;
     vertical-align: middle;
     border: 1px solid #2a5080;
   }
   .bottom-bar {
-    padding: 10px 48px 20px;
+    padding: 8px 48px 14px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
   }
   .clock {
-    font-size: 2.8rem;
+    font-size: 3.6rem;
     font-weight: 300;
     color: #e8d5a3;
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.02em;
   }
   .clock-ampm {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     font-weight: 400;
     color: #94a3b8;
     margin-left: 5px;
   }
   .next-prayer-info { text-align: right; }
   .next-label {
-    font-size: 0.75rem;
+    font-size: 0.9rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: #64748b;
     margin-bottom: 2px;
   }
   .next-value {
-    font-size: 1.05rem;
+    font-size: 1.3rem;
     color: #c9a84c;
     font-weight: 500;
   }
@@ -195,7 +195,7 @@
     align-items: center;
     justify-content: center;
     color: #64748b;
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 </style>
 </head>
@@ -249,13 +249,11 @@ const PRAYER_COLORS = {
   Asr: '#2a2a1a', Maghrib: '#3a1a1a', Isha: '#1a1a3a', "Jumu'ah": '#1a2f1a'
 };
 
-// Fixed / offset iqama config
-// null = no iqama (Sunrise), string = fixed time, number = minutes offset after adhan
 const IQAMA_CONFIG = {
-  Fajr:     '5:40 AM',
+  Fajr:     '5:30 AM',
   Sunrise:  null,
   Dhuhr:    '2:00 PM',
-  Asr:      '6:55 PM',
+  Asr:      '7:00 PM',
   Maghrib:  5,
   Isha:     5,
   "Jumu'ah": '2:00 PM'
@@ -325,7 +323,6 @@ async function fetchPrayerTimes() {
       { name: 'Isha',    adhan: fmt(timings.Isha)    },
     ];
 
-    // On Fridays, replace Dhuhr with Jumu'ah
     if (isFriday()) {
       prayerTimes[2] = { name: "Jumu'ah", adhan: fmt(timings.Dhuhr), isJumua: true };
     }
